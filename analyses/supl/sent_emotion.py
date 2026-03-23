@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 from streamlit_echarts import st_echarts, JsCode
 
-from app.data import SENT, EMOT, SENT_LABELS, EMOT_LABELS
+from data import SENT, EMOT, SENT_LABELS, EMOT_LABELS
 
 def compute_sent_emotion(df: pd.DataFrame) -> pd.DataFrame:
     ct = pd.crosstab(df[SENT], df[EMOT], normalize='index')

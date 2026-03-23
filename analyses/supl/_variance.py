@@ -6,7 +6,7 @@ import pandas as pd
 import streamlit as st
 from streamlit_echarts import st_echarts
 
-from app.data import DIS, REAL, SPEAK, SENT, EMOT, REAL_LABELS, SPEAK_LABELS, SENT_LABELS, EMOT_LABELS
+from data import DIS, REAL, SPEAK, SENT, EMOT, REAL_LABELS, SPEAK_LABELS, SENT_LABELS, EMOT_LABELS
 
 def compute_variance(df: pd.DataFrame) -> pd.DataFrame:
     task_label_list = [

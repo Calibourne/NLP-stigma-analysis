@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 
-from app.data import DIS, EMOT, REAL, SENT, SPEAK
+from data import DIS, EMOT, REAL, SENT, SPEAK
 
 # ── stigma type mapping (all 16 diseases) ───────────────────────────────────
 # Types: "judgment" (moral blame), "disgust" (avoidance/contagion), "mixed"

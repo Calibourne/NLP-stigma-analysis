@@ -8,7 +8,7 @@ import streamlit as st
 from scipy.stats import chi2_contingency
 from streamlit_echarts import JsCode, st_echarts
 
-from app.data import DIS, SPEAK
+from data import DIS, SPEAK
 
 
 def compute_residuals(df: pd.DataFrame) -> pd.DataFrame:

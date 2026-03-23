@@ -3,7 +3,7 @@
 import pandas as pd
 import streamlit as st
 
-from app.data import SPEAK, REAL, SENT, EMOT, REAL_LABELS, SENT_LABELS, EMOT_LABELS
+from data import SPEAK, REAL, SENT, EMOT, REAL_LABELS, SENT_LABELS, EMOT_LABELS
 
 def compute_nc_stats(df: pd.DataFrame) -> dict:
     nc  = df[df[SPEAK] == 'not_conclusive']

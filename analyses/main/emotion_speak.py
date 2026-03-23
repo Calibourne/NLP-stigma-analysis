@@ -9,7 +9,7 @@ import pandas as pd
 import streamlit as st
 from streamlit_echarts import st_echarts, JsCode
 
-from app.data import DIS, SPEAK, EMOT, SPEAK_LABELS
+from data import DIS, SPEAK, EMOT, SPEAK_LABELS
 
 CORE_EMOTIONS = ['anger', 'disgust', 'fear', 'joy', 'sadness', 'surprise']
 

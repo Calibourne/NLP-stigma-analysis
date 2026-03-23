@@ -2,8 +2,8 @@
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent.parent))
 
-from app.analyses.supl import sent_emotion, nc_bucket, real_gate, stigma_proxy, nlp_text
-from app.filters import render_filters
+from analyses.supl import sent_emotion, nc_bucket, real_gate, stigma_proxy, nlp_text
+from filters import render_filters
 import streamlit as st
 
 st.set_page_config(page_title='Supplementary Analysis', layout='wide')

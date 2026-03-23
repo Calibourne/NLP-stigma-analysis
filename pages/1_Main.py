@@ -2,8 +2,8 @@
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent.parent))
 
-from app.analyses.main import speaker_real, inconsistency, discourse, emotion_residual, speakertype_residual, tweet_samples, emotion_speak, variance
-from app.filters import render_filters
+from analyses.main import speaker_real, inconsistency, discourse, emotion_residual, speakertype_residual, tweet_samples, emotion_speak, variance
+from filters import render_filters
 import streamlit as st
 
 st.set_page_config(page_title='Main Analysis', layout='wide')

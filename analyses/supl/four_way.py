@@ -2,7 +2,7 @@
 import pandas as pd
 import streamlit as st
 
-from app.data import REAL, SPEAK, SENT, EMOT, COLS_4WAY
+from data import REAL, SPEAK, SENT, EMOT, COLS_4WAY
 
 _REAL_ABB  = {'real_sickness': 'rs', 'not_real_sickness': 'nrs'}
 _SPEAK_ABB = {'writer': 'wr', 'third_voice': 'tv', 'disease': 'di',

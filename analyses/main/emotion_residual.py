@@ -8,7 +8,7 @@ import streamlit as st
 from streamlit_echarts import st_echarts, JsCode
 from scipy.stats import chi2_contingency
 
-from app.data import DIS, EMOT
+from data import DIS, EMOT
 
 def compute_residuals(df: pd.DataFrame) -> pd.DataFrame:
     """Chi-squared standardized residuals: disease × emotion."""

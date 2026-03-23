@@ -1,6 +1,6 @@
 # app/filters.py
 import streamlit as st
-from app.data import DIS, REAL, SPEAK, SENT, EMOT, REAL_LABELS, SPEAK_LABELS, SENT_LABELS, EMOT_LABELS
+from data import DIS, REAL, SPEAK, SENT, EMOT, REAL_LABELS, SPEAK_LABELS, SENT_LABELS, EMOT_LABELS
 
 TEXT_COL = 'tweet_text'
 

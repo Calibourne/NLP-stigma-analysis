@@ -2,7 +2,7 @@
 import pandas as pd
 import streamlit as st
 
-from app.data import REAL, SPEAK
+from data import REAL, SPEAK
 
 def compute_real_gate(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()

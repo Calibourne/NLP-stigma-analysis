@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 from streamlit_echarts import st_echarts, JsCode
 
-from app.data import DIS, REAL, SPEAK
+from data import DIS, REAL, SPEAK
 
 def compute_speaker_real(df: pd.DataFrame) -> pd.DataFrame:
     """Real-sickness rate per (speakertype, disease). Returns pivot table."""

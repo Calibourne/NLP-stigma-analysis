@@ -11,7 +11,7 @@ from scipy.spatial.distance import pdist
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import StandardScaler
 
-from app.data import DIS, REAL, SPEAK, SENT, EMOT
+from data import DIS, REAL, SPEAK, SENT, EMOT
 
 TEXT_COL = 'tweet_text'
 

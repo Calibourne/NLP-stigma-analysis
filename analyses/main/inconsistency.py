@@ -2,7 +2,7 @@
 import pandas as pd
 import streamlit as st
 
-from app.data import REAL, EMOT, SENT, SPEAK, NEG_EMOTIONS
+from data import REAL, EMOT, SENT, SPEAK, NEG_EMOTIONS
 
 # Rules: (description, mask_fn)
 

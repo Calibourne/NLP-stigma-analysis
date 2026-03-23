@@ -1,10 +1,8 @@
 # app/Home.py
-import sys, pathlib
-sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 import streamlit as st
 from streamlit_echarts import st_echarts
-from app.data import sync_drive, load_data, DIS, REAL
-from app.filters import render_filters
+from data import sync_drive, load_data, DIS, REAL
+from filters import render_filters
 
 st.set_page_config(page_title='NLP Results Analysis', layout='wide')
 st.title('NLP Results Analysis')

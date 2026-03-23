@@ -10,7 +10,7 @@ import streamlit as st
 from scipy.stats import chi2_contingency
 from streamlit_echarts import st_echarts, JsCode
 
-from app.data import (DIS, REAL, SPEAK, SENT, EMOT,
+from data import (DIS, REAL, SPEAK, SENT, EMOT,
                       REAL_LABELS, SPEAK_LABELS, SENT_LABELS, EMOT_LABELS)
 
 _BG_COLOR    = 'white'

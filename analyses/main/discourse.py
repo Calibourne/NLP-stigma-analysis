@@ -9,7 +9,7 @@ import streamlit as st
 from streamlit_echarts import st_echarts, JsCode
 from scipy.stats import entropy as scipy_entropy
 
-from app.data import DIS, REAL, SPEAK, SENT, EMOT, COLS_4WAY
+from data import DIS, REAL, SPEAK, SENT, EMOT, COLS_4WAY
 
 _REAL_ABB  = {'real_sickness': 'rs', 'not_real_sickness': 'nrs'}
 _SPEAK_ABB = {'writer': 'wr', 'third_voice': 'tv', 'disease': 'di',
