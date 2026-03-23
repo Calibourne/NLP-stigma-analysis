@@ -13,5 +13,8 @@ dependencies = [
     "gdown>=5.2.0",
 ]
 
+[tool.poetry]
+package-mode = false
+
 [tool.uv]
 dev-dependencies = []
