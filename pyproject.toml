@@ -1,0 +1,17 @@
+[project]
+name = "nlp-results-app"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "streamlit>=1.55.0",
+    "streamlit-echarts>=0.6.0",
+    "pandas>=2.2.3",
+    "numpy>=2.2.6",
+    "matplotlib>=3.10.0",
+    "scipy>=1.15.1",
+    "scikit-learn>=1.6.1",
+    "gdown>=5.2.0",
+]
+
+[tool.uv]
+dev-dependencies = []
