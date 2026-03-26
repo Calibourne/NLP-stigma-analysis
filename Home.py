@@ -68,12 +68,14 @@ def render_bar(df_series, title, color="#5470c6", sort_by_index=False):
 with col_a:
     render_bar(filtered[DIS], "Tweets per disease")
 with col_b:
-    render_bar(filtered[REAL], "Realsickness distribution", color="#91cc75")
-
-col_c, col_d = st.columns(2)
-
-with col_c:
     if 'tweet_text' in filtered.columns:
         # Calculate word count by splitting on whitespace
         word_counts = filtered['tweet_text'].str.split().str.len()
         render_bar(word_counts, "Word count distribution", color="#FDAA3E", sort_by_index=True)
+
+st.download_button(
+    label='Download filtered data as CSV',
+    data=filtered.to_csv(index=False).encode('utf-8'),
+    file_name='filtered_data.csv',
+    mime='text/csv',
+)
