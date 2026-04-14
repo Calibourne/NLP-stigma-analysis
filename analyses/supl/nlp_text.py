@@ -222,6 +222,8 @@ def _render_coherence(df: pd.DataFrame):
         'yAxis': {'type': 'category', 'data': y_cats, 'axisLabel': {'fontSize': 10}},
         'visualMap': {'min': 0, 'max': 1, 'calculable': True, 'orient': 'horizontal',
                       'left': 'center', 'bottom': '0%', 'inRange': {'color': ['#edf8fb', '#006d2c']}},
+        'toolbox': {'feature': {'dataZoom': {}, 'restore': {}}},
+        'dataZoom': [{'type': 'inside'}],
         'series': [{'type': 'heatmap', 'data': data,
                     'label': {'show': True, 'fontSize': 9},
                     'emphasis': {'itemStyle': {'shadowBlur': 10}}}]

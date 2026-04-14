@@ -42,6 +42,8 @@ def render(df: pd.DataFrame) -> None:
             "left": "center", "bottom": "0%",
             "inRange": {"color": ["#2166ac", "#f7f7f7", "#d6604d"]},
         },
+        "toolbox": {"feature": {"dataZoom": {}, "restore": {}}},
+        "dataZoom": [{"type": "inside"}],
         "series": [{
             "type": "heatmap",
             "data": data,

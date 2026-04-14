@@ -302,6 +302,8 @@ def _render_heatmap(summary: pd.DataFrame):
             "bottom": "5%",
             "inRange": {"color": ["#fff7ec", "#fee8c8", "#fdd49e", "#fdbb84", "#fc8d59", "#ef6548", "#d7301f", "#b30000", "#7f0000"]}
         },
+        "toolbox": {"feature": {"dataZoom": {}, "restore": {}}},
+        "dataZoom": [{"type": "inside"}],
         "series": [{
             "name": "Proxy rate",
             "type": "heatmap",

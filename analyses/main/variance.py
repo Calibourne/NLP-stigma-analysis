@@ -180,6 +180,8 @@ def render(df: pd.DataFrame) -> None:
                     "inRange": {"color": ["#F8F9F9", _TASK_COLORS[tkey]]},
                     "textStyle": {"fontSize": 9},
                 },
+                "toolbox": {"feature": {"dataZoom": {}, "restore": {}}},
+                "dataZoom": [{"type": "inside"}],
                 "series": [{
                     "type": "heatmap",
                     "data": echarts_data,

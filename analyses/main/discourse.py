@@ -94,6 +94,8 @@ def render(df: pd.DataFrame) -> None:
             "left": "center", "bottom": "0%",
             "inRange": {"color": ["#ffffcc", "#fd8d3c", "#800026"]},
         },
+        "toolbox": {"feature": {"dataZoom": {}, "restore": {}}},
+        "dataZoom": [{"type": "inside"}],
         "series": [{
             "type": "heatmap",
             "data": pct_data,
