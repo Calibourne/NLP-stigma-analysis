@@ -12,6 +12,7 @@ dependencies = [
     "scikit-learn>=1.6.1",
     "gdown>=5.2.0",
     "seaborn>=0.13.0",
+    "streamlit-sortables>=0.3.0",
 ]
 
 [tool.poetry]

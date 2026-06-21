@@ -10,16 +10,17 @@ import streamlit as st
 from streamlit_echarts import st_echarts, JsCode
 
 from data import DIS, SPEAK, EMOT, SPEAK_LABELS
+from filters import get_order, apply_order
 
 CORE_EMOTIONS = ['anger', 'disgust', 'fear', 'joy', 'sadness', 'surprise']
 
 EMOTION_COLORS = {
-    'anger':    '#d62728',
-    'disgust':  '#8c564b',
-    'fear':     '#ff7f0e',
-    'joy':      '#2ca02c',
-    'sadness':  '#1f77b4',
-    'surprise': '#9467bd',
+    'anger':    '#B7250C',
+    'disgust':  '#72B941',
+    'fear':     '#B981DC',
+    'joy':      '#FFE882',
+    'sadness':  '#25A5E2',
+    'surprise': '#ff7f0e',
     'other':    '#7f7f7f',
 }
 
@@ -56,12 +57,7 @@ def compute_emotion_real(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def _build_figure(emotion_df: pd.DataFrame) -> plt.Figure:
-    emotion_pivot = emotion_df.pivot(index='disease', columns='speakertype', values='dominant_emotion')
-    pct_pivot     = emotion_df.pivot(index='disease', columns='speakertype', values='dominant_pct')
-    n_core_pivot  = emotion_df.pivot(index='disease', columns='speakertype', values='n_core')
-    n_total_pivot = emotion_df.pivot(index='disease', columns='speakertype', values='n_total')
-
+def _build_figure(emotion_pivot, pct_pivot, n_core_pivot, n_total_pivot, title: str = 'Dominant Emotion by Disease × Speaker Type') -> plt.Figure:
     all_emotions = CORE_EMOTIONS + ['other']
     emotion_to_num = {e: i for i, e in enumerate(all_emotions)}
     matrix_numeric = emotion_pivot.map(
@@ -86,11 +82,7 @@ def _build_figure(emotion_df: pd.DataFrame) -> plt.Figure:
     ax.set_yticklabels(dis_rows, fontsize=10)
     ax.set_xlabel('Speaker Type', fontsize=11)
     ax.set_ylabel('Disease', fontsize=11)
-    ax.set_title(
-        'Dominant Emotion by Disease x Speaker Type\n'
-        'Cell annotations: emotion (% | n_emotion/n_total)',
-        fontsize=12, fontweight='bold', pad=15,
-    )
+    ax.set_title(title, fontsize=12, fontweight='bold', pad=15)
 
     for i, dis in enumerate(dis_rows):
         for j, spk in enumerate(spk_cols):
@@ -111,7 +103,7 @@ def _build_figure(emotion_df: pd.DataFrame) -> plt.Figure:
                 tc = 'white' if is_dark else 'black'
                 weight = 'bold' if pct > 0.4 and n_core >= 15 else 'normal'
                 ax.text(j, i, label, ha='center', va='center',
-                        fontsize=7.2, color=tc, fontweight=weight)
+                        fontsize=10, color=tc, fontweight=weight)
 
     for x in np.arange(-0.5, len(spk_cols), 1):
         ax.axvline(x, color='white', linewidth=1.5)
@@ -131,8 +123,12 @@ def render(df: pd.DataFrame) -> None:
     n_core_pivot  = emotion_df.pivot(index='disease', columns='speakertype', values='n_core')
     n_total_pivot = emotion_df.pivot(index='disease', columns='speakertype', values='n_total')
 
-    dis_rows = emotion_pivot.index.tolist()
-    spk_cols = emotion_pivot.columns.tolist()
+    dis_rows = apply_order(emotion_pivot.index.tolist(), get_order('dis'))
+    spk_cols = apply_order(emotion_pivot.columns.tolist(), get_order('speak'))
+    emotion_pivot = emotion_pivot.loc[dis_rows, spk_cols]
+    pct_pivot     = pct_pivot.loc[dis_rows, spk_cols]
+    n_core_pivot  = n_core_pivot.loc[dis_rows, spk_cols]
+    n_total_pivot = n_total_pivot.loc[dis_rows, spk_cols]
 
     all_emotions = CORE_EMOTIONS + ['other']
     echarts_data = []
@@ -198,8 +194,7 @@ def render(df: pd.DataFrame) -> None:
     height_px = max(250, len(dis_rows) * 38 + 120)
     st_echarts(options=options, height=f"{height_px}px",
                key=f"emotion_speak_{'_'.join(dis_rows)}_{'_'.join(spk_cols)}")
-
-    fig = _build_figure(emotion_df)
+    fig = _build_figure(emotion_pivot, pct_pivot, n_core_pivot, n_total_pivot, "Dominant Emotion by Disease Cluster & Speaker-Type")
     buf = io.BytesIO()
     fig.savefig(buf, format='png', dpi=150, bbox_inches='tight')
     plt.close(fig)

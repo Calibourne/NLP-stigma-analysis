@@ -9,6 +9,7 @@ from streamlit_echarts import st_echarts, JsCode
 from scipy.stats import chi2_contingency
 
 from data import DIS, EMOT
+from filters import get_order, apply_order
 
 def compute_residuals(df: pd.DataFrame) -> pd.DataFrame:
     """Chi-squared standardized residuals: disease × emotion."""
@@ -23,6 +24,10 @@ def render(df: pd.DataFrame) -> None:
     vmax = float(np.abs(res.values).max())
     diseases = list(res.index)
     emotions = list(res.columns)
+
+    diseases = apply_order(diseases, get_order('dis'))
+    emotions = apply_order(emotions, get_order('emot'))
+    res = res.loc[diseases, emotions]
 
     data = []
     for i, dis in enumerate(diseases):
@@ -63,9 +68,9 @@ def render(df: pd.DataFrame) -> None:
     ax.set_yticklabels([d.capitalize() for d in res.index], fontsize=9)
     for i in range(len(res.index)):
         for j in range(len(res.columns)):
-            ax.text(j, i, f'{res.values[i,j]:.2f}', ha='center', va='center', fontsize=7.5, color='black')
+            ax.text(j, i, f'{res.values[i,j]:.2f}', ha='center', va='center', fontsize=10, color='black')
     plt.colorbar(im, ax=ax, label='Standardized residual')
-    ax.set_title('Chi-squared Standardized Residuals: Disease × Emotion')
+    ax.set_title("Chi-squared Standardized Residuals: Disease Cluster & Emotion")
     plt.tight_layout()
     buf = io.BytesIO()
     fig_mpl.savefig(buf, format='png', dpi=150, bbox_inches='tight')

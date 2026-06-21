@@ -22,6 +22,22 @@ SPEAK_LABELS = ['writer', 'third_voice', 'disease', 'not_conclusive',
 SENT_LABELS  = ['positive', 'neutral', 'negative']
 EMOT_LABELS  = ['anger', 'disgust', 'fear', 'joy', 'sadness', 'surprise', 'other']
 
+# ── Canonical display orders (edit these lists to define your preferred order) ─
+DIS_ORDER = [
+    'hiv', 'obesity', 'diabetic', 'leprosy', 'hpv',
+    'tourette', 'epilepsy', 'alzheimer', 'parkinson',
+    'cancer', 'psoriasis', 'vitiligo', 'asthma', 'fibro', 'celiac', 'flu',
+]
+
+DIS_CATEGORIES = {
+    'infectious':   ['hiv', 'hpv', 'leprosy', 'flu'],
+    'neurological': ['epilepsy', 'tourette', 'parkinson', 'alzheimer'],
+    'lifestyle':    ['cancer', 'diabetic', 'obesity'],
+    'auto-immune':  ['asthma', 'fibro', 'celiac', 'psoriasis', 'vitiligo'],
+}
+DIS_CAT_ORDER = ['infectious', 'neurological', 'lifestyle', 'auto-immune']
+DIS_TO_CAT = {d: cat for cat, ds in DIS_CATEGORIES.items() for d in ds}
+
 NEG_EMOTIONS = ['anger', 'disgust', 'fear', 'sadness']
 
 VALID_LABELS = {

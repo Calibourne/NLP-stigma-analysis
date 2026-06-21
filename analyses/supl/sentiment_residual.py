@@ -9,6 +9,7 @@ from scipy.stats import chi2_contingency
 from streamlit_echarts import JsCode, st_echarts
 
 from data import DIS, SENT, SENT_LABELS
+from filters import get_order, apply_order
 
 
 def compute_residuals(df: pd.DataFrame) -> pd.DataFrame:
@@ -28,6 +29,10 @@ def render(df: pd.DataFrame) -> None:
     vmax = float(np.abs(res.values).max())
     diseases = list(res.index)
     sentiments = list(res.columns)
+
+    diseases = apply_order(diseases, get_order('dis'))
+    sentiments = apply_order(sentiments, get_order('sent'))
+    res = res.loc[diseases, sentiments]
 
     data = []
     for i, dis in enumerate(diseases):

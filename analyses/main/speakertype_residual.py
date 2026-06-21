@@ -9,6 +9,7 @@ from scipy.stats import chi2_contingency
 from streamlit_echarts import JsCode, st_echarts
 
 from data import DIS, SPEAK
+from filters import get_order, apply_order
 
 
 def compute_residuals(df: pd.DataFrame) -> pd.DataFrame:
@@ -25,6 +26,10 @@ def render(df: pd.DataFrame) -> None:
     vmax = float(np.abs(res.values).max())
     diseases = list(res.index)
     speakers = list(res.columns)
+
+    diseases = apply_order(diseases, get_order('dis'))
+    speakers = apply_order(speakers, get_order('speak'))
+    res = res.loc[diseases, speakers]
 
     data = []
     for i, dis in enumerate(diseases):
@@ -55,7 +60,7 @@ def render(df: pd.DataFrame) -> None:
     }
     st_echarts(options=options, height="450px")
 
-    # Download as matplotlib PNG
+    # Download as matplotlib PNGpeakertype',
     fig, ax = plt.subplots(figsize=(max(9, len(speakers) * 1.2), max(5, len(diseases) * 0.7)))
     im = ax.imshow(res.values, aspect='auto', cmap='RdBu_r', vmin=-vmax, vmax=vmax)
     ax.set_xticks(range(len(speakers)))
@@ -64,9 +69,9 @@ def render(df: pd.DataFrame) -> None:
     ax.set_yticklabels([d.capitalize() for d in diseases], fontsize=9)
     for i in range(len(diseases)):
         for j in range(len(speakers)):
-            ax.text(j, i, f'{res.values[i,j]:.2f}', ha='center', va='center', fontsize=7.5, color='black')
+            ax.text(j, i, f'{res.values[i,j]:.2f}', ha='center', va='center', fontsize=10, color='black')
     plt.colorbar(im, ax=ax, label='Standardized residual')
-    ax.set_title('Chi-squared Standardized Residuals: Disease × Speakertype')
+    ax.set_title("Chi-squared Standardized Residuals: Disease Cluster & Speaker-Type")
     plt.tight_layout()
     buf = io.BytesIO()
     fig.savefig(buf, format='png', dpi=150, bbox_inches='tight')

@@ -8,6 +8,7 @@ import streamlit as st
 from streamlit_echarts import st_echarts, JsCode
 
 from data import DIS, REAL, SPEAK
+from filters import get_order, apply_order
 
 def compute_speaker_real(df: pd.DataFrame) -> pd.DataFrame:
     """Real-sickness rate per (speakertype, disease). Returns pivot table."""
@@ -21,6 +22,10 @@ def render(df: pd.DataFrame) -> None:
     pivot = compute_speaker_real(df)
     diseases = [c for c in pivot.columns]
     speakers = list(pivot.index)
+
+    speakers = apply_order(speakers, get_order('speak'))
+    diseases = apply_order(diseases, get_order('dis'))
+    pivot = pivot.loc[speakers, diseases]
 
     # ECharts heatmap data: [x_idx, y_idx, value]
     data = []
@@ -65,7 +70,7 @@ def render(df: pd.DataFrame) -> None:
             if not pd.isna(val):
                 ax.text(j, i, f'{val:.2f}', ha='center', va='center', fontsize=8, color='black')
     plt.colorbar(im, ax=ax, label='real_sickness rate')
-    ax.set_title('Real-Sickness Rate per Speakertype × Disease')
+    ax.set_title("Real-Sickness Rate per Speaker-Type & Disease Cluster")
     plt.tight_layout()
     buf = io.BytesIO()
     fig_mpl.savefig(buf, format='png', dpi=150, bbox_inches='tight')

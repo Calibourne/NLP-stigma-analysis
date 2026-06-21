@@ -11,7 +11,8 @@ from scipy.stats import chi2_contingency
 from streamlit_echarts import st_echarts, JsCode
 
 from data import (DIS, REAL, SPEAK, SENT, EMOT,
-                      REAL_LABELS, SPEAK_LABELS, SENT_LABELS, EMOT_LABELS)
+                  REAL_LABELS, SPEAK_LABELS, SENT_LABELS, EMOT_LABELS)
+from filters import get_order, apply_order
 
 _BG_COLOR    = 'white'
 _SPINE_COLOR = '#444444'
@@ -63,9 +64,9 @@ def _make_cmap(hex_color: str):
     return LinearSegmentedColormap.from_list('task_cmap', ['#F8F9F9', hex_color], N=256)
 
 
-def _build_figure(prop_tables: dict, dis_display: list) -> plt.Figure:
+def _build_figure(prop_tables: dict, dis_display: list, title: str = 'Cross-Disease Label Distributions') -> plt.Figure:
     fig = plt.figure(figsize=(15, 7), facecolor=_BG_COLOR)
-    fig.suptitle('Cross-Disease Label Distributions', fontsize=15,
+    fig.suptitle(title, fontsize=15,
                  fontweight='bold', y=0.98, fontfamily=_FONT, color='#222222')
 
     gs = gridspec.GridSpec(1, 4, figure=fig, wspace=0.38,
@@ -129,7 +130,13 @@ def render(df: pd.DataFrame) -> None:
     prop_tables = result['prop_tables']
 
     dis_labels  = sorted(df[DIS].unique())
-    dis_display = [d.replace('_', ' ').capitalize() for d in dis_labels]
+
+    _TASK_CANONICAL = {
+        'realsickness': REAL_LABELS,
+        'speakertype':  get_order('speak'),
+        'sentiment':    get_order('sent'),
+        'emotion':      get_order('emot'),
+    }
 
     # ── ECharts: 4-panel heatmap ──────────────────────────────────────────────
     task_order = ['realsickness', 'speakertype', 'sentiment', 'emotion']
@@ -137,7 +144,11 @@ def render(df: pd.DataFrame) -> None:
 
     for col_ui, tkey in zip(cols_ui, task_order):
         with col_ui:
-            prop   = prop_tables[tkey]
+            prop = prop_tables[tkey]
+            ordered_dis = [d for d in apply_order(dis_labels, get_order('dis')) if d in prop.index]
+            prop = prop.loc[ordered_dis]
+            dis_display = [d.replace('_', ' ').capitalize() for d in prop.index]
+            prop = prop[apply_order(list(prop.columns), _TASK_CANONICAL[tkey])]
             data   = prop.values
             labels = list(prop.columns)
             n_rows, n_cols = data.shape
@@ -196,7 +207,13 @@ def render(df: pd.DataFrame) -> None:
             st_echarts(options=options, height="500px")
 
     # ── Download PNG ──────────────────────────────────────────────────────────
-    fig = _build_figure(prop_tables, dis_display)
+    ordered_props = {}
+    for tkey in task_order:
+        p = prop_tables[tkey]
+        p = p.loc[[d for d in apply_order(dis_labels, get_order('dis')) if d in p.index]]
+        ordered_props[tkey] = p[apply_order(list(p.columns), _TASK_CANONICAL[tkey])]
+    dis_display_png = [d.replace('_', ' ').capitalize() for d in ordered_props['realsickness'].index]
+    fig = _build_figure(ordered_props, dis_display_png, "Cross-Disease Cluster Label Distribution (All Tasks)")
     buf = io.BytesIO()
     fig.savefig(buf, format='png', dpi=150, bbox_inches='tight')
     plt.close(fig)

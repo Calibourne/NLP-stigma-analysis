@@ -6,6 +6,7 @@ import numpy as np
 import streamlit as st
 
 from data import DIS, EMOT, REAL, SENT, SPEAK
+from filters import get_order, apply_order
 
 # ── stigma type mapping (all 16 diseases) ───────────────────────────────────
 # Types: "judgment" (moral blame), "disgust" (avoidance/contagion), "mixed"
@@ -49,11 +50,7 @@ DISPLAY_NAMES = {
     "celiac":    "Celiac",
 }
 
-DISEASE_ORDER = [
-    "hiv", "obesity", "diabetic", "leprosy", "hpv",
-    "tourette", "epilepsy", "alzheimer", "parkinson",
-    "cancer", "psoriasis", "vitiligo", "asthma", "fibro", "celiac",
-]
+
 DISGUST_DISEASES  = [d for d, t in STIGMA_TYPE.items() if t == "disgust"]
 JUDGMENT_DISEASES = [d for d, t in STIGMA_TYPE.items() if t == "judgment"]
 MIXED_DISEASES    = [d for d, t in STIGMA_TYPE.items() if t == "mixed"]
@@ -77,7 +74,7 @@ def _compute(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     d["judgment_proxy"] = d["j_hostility"] | d["j_dismissive"]
 
     records = []
-    for disease in DISEASE_ORDER:
+    for disease in [d for d in get_order('dis') if d in STIGMA_TYPE]:
         g = d[d[DIS] == disease]
         if g.empty:
             continue
@@ -129,7 +126,7 @@ def _compute(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 def _render_bar_per_disease(summary: pd.DataFrame):
-    present = [d for d in DISEASE_ORDER if d in summary["disease"].values]
+    present = [d for d in apply_order(list(STIGMA_TYPE.keys()), get_order('dis')) if d in summary["disease"].values]
     diseases = [DISPLAY_NAMES[d] for d in present]
     d_rates = [round(summary.loc[summary["disease"] == d, "disgust_proxy_rate"].values[0] * 100, 1) for d in present]
     j_rates = [round(summary.loc[summary["disease"] == d, "judgment_proxy_rate"].values[0] * 100, 1) for d in present]
@@ -276,10 +273,11 @@ def _render_aggregate_bar(type_agg: pd.DataFrame):
 
 
 def _render_heatmap(summary: pd.DataFrame):
-    present = [d for d in DISEASE_ORDER if d in summary["disease"].values]
+    present = [d for d in apply_order(list(STIGMA_TYPE.keys()), get_order('dis')) if d in summary["disease"].values]
+
     diseases = [f"{DISPLAY_NAMES[d]} ({STIGMA_TYPE[d][0].upper()})" for d in present]
     proxies = ["Disgust", "Judgment"]
-    
+
     data = []
     for i, d in enumerate(present):
         d_rate = round(summary.loc[summary["disease"] == d, "disgust_proxy_rate"].values[0], 3)

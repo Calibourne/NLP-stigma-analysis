@@ -11,7 +11,8 @@ from scipy.spatial.distance import pdist
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import StandardScaler
 
-from data import DIS, REAL, SPEAK, SENT, EMOT
+from data import DIS, REAL, SPEAK, SENT, EMOT, REAL_LABELS, SPEAK_LABELS, SENT_LABELS, EMOT_LABELS
+from filters import get_order, apply_order
 
 TEXT_COL = 'tweet_text'
 
@@ -210,6 +211,11 @@ def _render_coherence(df: pd.DataFrame):
 
     ct = pd.crosstab(sub[col_a], sub[col_b])
     ct_norm = ct.div(ct.sum(axis=1), axis=0)
+
+    _COL_CANONICAL = {REAL: REAL_LABELS, SPEAK: get_order('speak'), SENT: get_order('sent'), EMOT: get_order('emot')}
+    ordered_rows = apply_order(ct_norm.index.tolist(), _COL_CANONICAL.get(col_a, ct_norm.index.tolist()))
+    ordered_cols = apply_order(ct_norm.columns.tolist(), _COL_CANONICAL.get(col_b, ct_norm.columns.tolist()))
+    ct_norm = ct_norm.loc[ordered_rows, ordered_cols]
 
     x_cats = ct_norm.columns.tolist()
     y_cats = ct_norm.index.tolist()[::-1]  # reverse so top of chart = first row

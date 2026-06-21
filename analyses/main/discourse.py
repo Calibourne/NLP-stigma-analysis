@@ -10,6 +10,7 @@ from streamlit_echarts import st_echarts, JsCode
 from scipy.stats import entropy as scipy_entropy
 
 from data import DIS, REAL, SPEAK, SENT, EMOT, COLS_4WAY
+from filters import get_order, apply_order
 
 _REAL_ABB  = {'real_sickness': 'rs', 'not_real_sickness': 'nrs'}
 _SPEAK_ABB = {'writer': 'wr', 'third_voice': 'tv', 'disease': 'di',
@@ -48,7 +49,8 @@ def compute_discourse(df):
 def render(df: pd.DataFrame) -> None:
     st.subheader('Dominant Discourse Mode Per Disease')
     entropy_d, top5_d = compute_discourse(df)
-    dis_sorted = sorted(entropy_d, key=entropy_d.get)
+
+    dis_sorted = apply_order(list(entropy_d.keys()), get_order('dis'))
 
     # ── ECharts: entropy bar ──────────────────────────────────────────────────
     ent_options = {
@@ -121,6 +123,10 @@ def render(df: pd.DataFrame) -> None:
             pct_mat2[i, j] = entry['pct']
             lbl_mat2[i, j] = entry['label']
 
+    fig_title = st.text_input(
+        'Figure title', key='title_discourse',
+        value='Dominant 4-Way Discourse Archetypes per Disease',
+    )
     fig_h = max(10, n_dis2 * 0.75)
     fig_mpl = plt.figure(figsize=(16, fig_h))
     gs = gridspec.GridSpec(1, 2, figure=fig_mpl, width_ratios=[0.55, top_k2], wspace=0.04)
@@ -157,7 +163,7 @@ def render(df: pd.DataFrame) -> None:
     ax_hm.tick_params(length=0)
     for x in np.arange(-0.5, top_k2, 1): ax_hm.axvline(x, color='white', lw=1.2)
     for y in np.arange(-0.5, n_dis2, 1): ax_hm.axhline(y, color='white', lw=1.2)
-    fig_mpl.suptitle('Dominant 4-Way Discourse Archetypes per Disease', fontsize=10.5, fontweight='bold', y=1.02)
+    fig_mpl.suptitle(fig_title, fontsize=10.5, fontweight='bold', y=1.02)
     plt.tight_layout()
 
     buf = io.BytesIO()
